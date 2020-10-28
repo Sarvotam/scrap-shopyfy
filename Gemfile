@@ -8,6 +8,12 @@ gem 'puma', '~> 4.1'
 gem 'sass-rails', '>= 6'
 gem 'nokogiri'
 
+gem 'angular-rails-templates'
+gem 'uglifier', '>= 1.3.0'
+gem 'bower-rails'
+gem 'responders'
+gem 'angular_rails_csrf'
+
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 
