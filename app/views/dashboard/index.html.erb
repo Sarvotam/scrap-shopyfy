@@ -4,22 +4,11 @@
       <div class="col-md-12">
         <form class="form-inline" ng-submit="addProduct()">
           <div class="form-group">
-            <input type="text" class="form-control" name="url" placeholder="url" ng-model="product.url" />
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="title" placeholder="title" ng-model="product.title" />
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="price" placeholder="price" ng-model="product.price" />
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="description" placeholder="Description" ng-model="product.description" />
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="mobile_number" placeholder="mobile_number" ng-model="product.mobile_number" />
-          </div>
-          <button type="submit" class="btn btn-primary">Add</button>
+            <input type="text" class="form-control" name="url" placeholder="url" ng-model="product.url"style="width: 920px;" />
+          </div> &nbsp &nbsp 
+          <button type="submit" class="btn btn-primary">Scrap Url</button>
         </form>
+        <br>
       </div>
     </div>
     <div class="row">
@@ -47,7 +36,7 @@
                 mobile_number
                 <span ng-if="sorting.sort_by == 'mobile_number'" class="glyphicon glyphicon-chevron-{{order}}" aria-hidden="true"></span>
               </th>
-              <th class="col-md-2">Actions</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -73,10 +62,7 @@
        <td>
         <span>{{product.mobile_number}}</span>
       </td>
-      <td>
-        <button ng-click="editProduct(product)" class="btn btn-primary btn-xs">Edit</button>
-        <button ng-click="destroyProduct(product, $index)" class="btn btn-danger btn-xs">Destroy</button>
-      </td>
+      
     </script>
   </div>
 </div>

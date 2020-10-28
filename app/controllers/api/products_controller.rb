@@ -1,41 +1,27 @@
 module Api
   require 'nokogiri'
   require 'open-uri'
-
   class ProductsController < ApplicationController
     respond_to :json
     before_action :set_product, only: [:show, :edit, :update, :destroy]
-
     def index
-   respond_with Product.order("#{sort_by} #{order}")
-     
-    end
-
-    def show
-    end
-    def new
-      @product = Product.new
-    end
-    def edit
+     respond_with Product.all  
     end
 
     def create
       # @product = Product.new(product_params)
       product_url = params[:product][:url]
       product = Product.find_by(url: product_url)
-
       if product
         if product.created_at::time <= 3.seconds.ago
           respond_with :api, product, status: :ok
           redirect_to product, notice: 'Product was already scraped.' 
-
         end
       else 
         scrape_data = scrape_url(product_url)
         product = Product.create!(scrape_data)
         render json: { errors: product.errors.full_messages }, status: :succesfully_scraped
       end
-
     end
 
     private
@@ -56,13 +42,10 @@ module Api
         description: description
     }
     end 
-
-      # Use callbacks to share common setup or constraints between actions.
       def set_product
         @product = Product.find(params[:id])
       end
 
-      # Only allow a list of trusted parameters through.
       def product_params
         params.require(:product).permit(:url, :title, :description, :price, :mobile_number)
       end
