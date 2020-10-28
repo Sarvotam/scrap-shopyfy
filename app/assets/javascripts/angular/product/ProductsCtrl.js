@@ -9,7 +9,6 @@ app.controller('ProductsCtrl', ['$scope', 'Product', function($scope, Product) {
 
   $scope.addProduct = function() {
     
-
     Product.save($scope.product,
       function(response, _headers) {
         $scope.products.push(response);

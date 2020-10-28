@@ -3,18 +3,19 @@ module Api
   require 'open-uri'
 
   class ProductsController < ApplicationController
+    respond_to :json
     before_action :set_product, only: [:show, :edit, :update, :destroy]
+
     def index
-      @products = Product.all
+   respond_with Product.order("#{sort_by} #{order}")
+     
     end
 
     def show
     end
-
     def new
       @product = Product.new
     end
-
     def edit
     end
 
@@ -25,13 +26,14 @@ module Api
 
       if product
         if product.created_at::time <= 3.seconds.ago
+          respond_with :api, product, status: :ok
           redirect_to product, notice: 'Product was already scraped.' 
 
         end
       else 
         scrape_data = scrape_url(product_url)
         product = Product.create!(scrape_data)
-        redirect_to product, notice: "succesfully scraped"
+        render json: { errors: product.errors.full_messages }, status: :succesfully_scraped
       end
 
     end
@@ -63,6 +65,18 @@ module Api
       # Only allow a list of trusted parameters through.
       def product_params
         params.require(:product).permit(:url, :title, :description, :price, :mobile_number)
+      end
+
+      def sort_by
+        %w(url
+           title
+           description
+           price
+           mobile_number).include?(params[:sort_by]) ? params[:sort_by] : 'name'
+      end
+  
+      def order
+        %w(asc desc).include?(params[:order]) ? params[:order] : 'asc'
       end
   end
 end
