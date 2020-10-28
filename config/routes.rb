@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  get 'dashboard/index'
   resources :products
-
   root to: 'dashboard#index'
 
   namespace :api do
