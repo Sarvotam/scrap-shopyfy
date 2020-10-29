@@ -4,12 +4,12 @@ module Api
   class ProductsController < ApplicationController
     respond_to :json
     before_action :set_product, only: [:show, :edit, :update, :destroy]
+    
     def index
      respond_with Product.all  
     end
 
     def create
-      # @product = Product.new(product_params)
       product_url = params[:product][:url]
       product = Product.find_by(url: product_url)
       if product
