@@ -3,24 +3,27 @@ module Api
   require 'open-uri'
   class ProductsController < ApplicationController
     respond_to :json
-    before_action :set_product, only: [:show, :edit, :update, :destroy]
-    
+    before_action :set_product, only: [:show, :update]
+
     def index
-     respond_with Product.all  
+      respond_with Product.order('created_at desc')
     end
 
     def create
       product_url = params[:product][:url]
       product = Product.find_by(url: product_url)
       if product
-        if product.created_at::time <= 3.seconds.ago
+        if product.created_at::time <= 1.week.ago
           respond_with :api, product, status: :ok
-          redirect_to product, notice: 'Product was already scraped.' 
+        else
+          scrape_data = scrape_url(product_url)
+          product = product.update!(scrape_url)
+          respond_with :api, product, status: :ok
         end
-      else 
+      else
         scrape_data = scrape_url(product_url)
         product = Product.create!(scrape_data)
-        render json: { errors: product.errors.full_messages }, status: :succesfully_scraped
+        respond_with :api, product, status: :ok
       end
     end
 
@@ -33,33 +36,22 @@ module Api
       description = doc.css('td td td td td td td tr:nth-of-type(2) td, table#lblue:nth-of-type(4) tr:nth-of-type(2) td').text
       price = doc.css('font.bigprice, table#lblue:nth-of-type(4) tr:nth-of-type(2) td').text
       mobile_number = doc.css('#white a img, table#lblue:nth-of-type(2) tr:nth-of-type(7) td:nth-of-type(2)').text
-    
-    return  product_info = {
+
+      return  product_info = {
         url: url,
         title: title,
         price: price,
         mobile_number: mobile_number,
         description: description
-    }
-    end 
-      def set_product
-        @product = Product.find(params[:id])
-      end
+      }
+    end
 
-      def product_params
-        params.require(:product).permit(:url, :title, :description, :price, :mobile_number)
-      end
+    def set_product
+      @product = Product.find(params[:id])
+    end
 
-      def sort_by
-        %w(url
-           title
-           description
-           price
-           mobile_number).include?(params[:sort_by]) ? params[:sort_by] : 'name'
-      end
-  
-      def order
-        %w(asc desc).include?(params[:order]) ? params[:order] : 'asc'
-      end
+    def product_params
+      params.require(:product).permit(:url, :title, :description, :price, :mobile_number)
+    end
   end
 end
