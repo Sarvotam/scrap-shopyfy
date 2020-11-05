@@ -26,10 +26,6 @@ app.controller('ProductsCtrl', ['$scope', 'Product', function ($scope, Product) 
     }
   };
 
-  $scope.hideForm = function () {
-    $scope.editing = {};
-  };
-
   $scope.sortProducts = function () {
     Product.sort(
       function (response, _headers) {
@@ -37,8 +33,4 @@ app.controller('ProductsCtrl', ['$scope', 'Product', function ($scope, Product) 
       }
     );
   };
-
-  $scope.$watch('sorting.order', function (oldVal, newVal) {
-    $scope.updateArrowOrder();
-  });
 }]);
